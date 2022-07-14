@@ -34,7 +34,6 @@ def get_show(show_id, headers, user_obj):
 
     # This while prevents possible error 500 from the website due to too many requests in short time
     while tries < 5:
-        seasons = None
         try:
             resp = requests.get('https://www.tvtime.com/en/show/{}'.format(show_id), headers=headers,
                                 cookies={'symfony': user_obj['symfony'], 'tvstRemember': user_obj['tvstRemember']})
