@@ -268,7 +268,7 @@ def change_episode(episode, seasonID):
                            "season=%(season)s where id=%(id)s", {
                                'number': episode['number'],
                                'name': episode['name'],
-                               'air_date': episode['air_date'] if str(episode['air_date']).strip() != '' else 'NULL',
+                               'air_date': episode['air_date'] if str(episode['air_date']).strip() != '' else None,
                                'season': seasonID,
                                'id': episode['id']
                            })
@@ -332,8 +332,9 @@ def main():
 
             for episode in season['episodes']:
                 change_episode(episode, seasonID)
+                print(f"Completed {s['name']} episode {episode['number']} - {episode['name']}")
 
-    print("Done!")
+    print("\nFinished backup! Exiting...")
 
 
 if __name__ == '__main__':

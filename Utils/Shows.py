@@ -30,14 +30,24 @@ def parse_series_list(shows_page: str) -> List[any]:
 
 
 def get_show(show_id, headers, user_obj):
-    resp = requests.get('https://www.tvtime.com/en/show/{}'.format(show_id), headers=headers,
-                        cookies={'symfony': user_obj['symfony'], 'tvstRemember': user_obj['tvstRemember']})
-    resp.raise_for_status()
-    user_obj['symfony'] = resp.cookies.get('symfony', user_obj['symfony'])
-    user_obj['tvstRemember'] = resp.cookies.get('tvstRemember', user_obj['tvstRemember'])
+    tries = 0
 
-    seasons = parse_season_list(resp.text)
-    return seasons
+    # This while prevents possible error 500 from the website due to too many requests in short time
+    while tries < 5:
+        seasons = None
+        try:
+            resp = requests.get('https://www.tvtime.com/en/show/{}'.format(show_id), headers=headers,
+                                cookies={'symfony': user_obj['symfony'], 'tvstRemember': user_obj['tvstRemember']})
+            resp.raise_for_status()
+            user_obj['symfony'] = resp.cookies.get('symfony', user_obj['symfony'])
+            user_obj['tvstRemember'] = resp.cookies.get('tvstRemember', user_obj['tvstRemember'])
+
+            seasons = parse_season_list(resp.text)
+            return seasons
+        except:
+            tries = tries + 1
+
+    print("Error fetching show...")
 
 
 def parse_season_list(show_page: str) -> List[Any]:
