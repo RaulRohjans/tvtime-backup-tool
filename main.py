@@ -30,7 +30,7 @@ configuration = {
 # Methods
 def start_cfg():
     global configuration
-    cfg_path = os.path.join('config', 'config.json')
+    cfg_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), os.path.join('config', 'config.json'))
 
     if os.path.exists(cfg_path):
         # If file exists, read it
